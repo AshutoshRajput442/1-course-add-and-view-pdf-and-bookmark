@@ -1,0 +1,120 @@
+/* Main container for both Course List & Favorites */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 20px;
+  gap: 20px;
+}
+
+/* Course List & Favorites Containers */
+.course-container, .favorites {
+  width: 100%;
+  max-width: 900px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Course List & Favorites Title */
+h2 {
+  text-align: center;
+  color: #333;
+}
+
+/* Grid layout for course items */
+ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+}
+
+/* Course Item */
+.course-item, .favorite-item {
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Course Title */
+h3 {
+  font-size: 18px;
+  color: #444;
+  margin-bottom: 10px;
+}
+
+/* Course Description */
+p {
+  font-size: 14px;
+  color: #666;
+}
+
+/* Image Styling - Ensures it does NOT cut off */
+.course-image, .favorite-image {
+  width: 100%;
+  max-width: 250px;  /* Set max width */
+  height: auto;
+  object-fit: contain;  /* Ensures the image is fully visible */
+  border-radius: 6px;
+  margin: 10px 0;
+}
+
+/* PDF Link */
+.pdf-link {
+  display: inline-block;
+  text-decoration: none;
+  color: #007bff;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+/* Bookmark & Remove Buttons */
+.bookmark-btn, .remove-btn {
+  padding: 8px 12px;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: 0.3s;
+  /* border: 12px solid rebeccapurple; */
+}
+
+.bookmark-btn {
+  background-color: #ffcc00;
+  color: #333;
+}
+
+.remove-btn {
+  background-color: #ff4d4d;
+  color: white;
+}
+
+.bookmark-btn:hover {
+  background-color: #ffb700;
+  
+}
+
+.remove-btn:hover {
+  background-color: #e60000;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  ul {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+}
+/* border: 12px solid rebeccapurple; */
+#course-icon-btn{
+  border: 12px solid rebeccapurple;
+}

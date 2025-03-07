@@ -1,0 +1,35 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #007bff;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    border: 12px solid rgb(153, 51, 51);
+  }
+  
+  .header h1 {
+    margin: 0;
+  }
+  
+  .header div {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .header-btn {
+    background-color: white;
+    color: #007bff;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  .header-btn:hover {
+    background-color: #00b3a1;
+    color: white;
+  }
+  

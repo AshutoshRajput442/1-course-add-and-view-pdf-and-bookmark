@@ -1,0 +1,47 @@
+.bookmarks-container {
+    text-align: center;
+    padding: 20px;
+}
+
+.favorites-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    justify-items: center;
+}
+
+.favorite-item {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 10px;
+    background: #f9f9f9;
+    text-align: center;
+    width: 250px;
+}
+
+.favorite-image {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.pdf-link {
+    display: block;
+    margin: 10px 0;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.remove-btn {
+    background: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.remove-btn:hover {
+    background: #ff1a1a;
+}

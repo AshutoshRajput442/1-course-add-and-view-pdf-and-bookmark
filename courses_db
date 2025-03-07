@@ -1,0 +1,12 @@
+CREATE TABLE courses (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255),
+    description TEXT,
+    duration INT,
+    image VARCHAR(255),
+    pdf VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+SELECT * FROM new_course_db.courses;
+commit;
