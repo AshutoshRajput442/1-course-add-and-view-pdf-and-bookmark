@@ -145,3 +145,95 @@ func init() {
 		os.Mkdir(uploadDir, os.ModePerm)
 	}
 }
+
+// BookmarkRequest represents the request body for adding/removing bookmarks
+type BookmarkRequest struct {
+	StudentID int `json:"student_id"`
+	CourseID  int `json:"course_id"`
+}
+
+// AddToBookmarks adds a course to the user's bookmarks
+func AddToBookmarks(c *gin.Context) {
+	var req BookmarkRequest
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing student_id or course_id"})
+		return
+	}
+
+	query := "INSERT INTO bookmarkcourses (students_id, course_id) VALUES (?, ?)"
+	_, err := config.DB.Exec(query, req.StudentID, req.CourseID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to bookmark course"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Course added to bookmarks successfully"})
+}
+
+// RemoveFromBookmarks removes a course from the user's bookmarks
+func RemoveFromBookmarks(c *gin.Context) {
+	var req BookmarkRequest
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing student_id or course_id"})
+		return
+	}
+
+	query := "DELETE FROM bookmarkcourses WHERE students_id = ? AND course_id = ?"
+	_, err := config.DB.Exec(query, req.StudentID, req.CourseID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to remove bookmark"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Course removed from bookmarks successfully"})
+}
+
+// GetBookmarkedCourses retrieves all bookmarked courses for a specific user
+
+func GetBookmarkedCourses(c *gin.Context) {
+	studentID := c.Query("student_id") // Get student_id from query parameter
+
+	if studentID == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing student_id parameter"})
+		return
+	}
+
+	// Define a struct for response
+	type Course struct {
+		ID          int    `json:"id"`
+		Title       string `json:"title"`
+		Description string `json:"description"`
+		Duration    int    `json:"duration"`
+		ImagePath   string `json:"image"`
+		PDFPath     string `json:"pdf"`
+	}
+
+	// SQL Query
+	query := `
+		SELECT c.id, c.title, c.description, c.duration, c.image, c.pdf 
+FROM bookmarkcourses bc
+JOIN courses c ON bc.course_id = c.id
+WHERE bc.students_id = ?;
+	`
+
+	rows, err := config.DB.Query(query, studentID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch bookmarked courses"})
+		return
+	}
+	defer rows.Close()
+
+	var courses []Course
+	for rows.Next() {
+		var course Course
+		if err := rows.Scan(&course.ID, &course.Title, &course.Description, &course.Duration, &course.ImagePath, &course.PDFPath); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Error scanning data"})
+			return
+		}
+		courses = append(courses, course)
+	}
+
+	c.JSON(http.StatusOK, courses)
+}

@@ -1,19 +1,35 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import "./favorites.css";
 
 const Bookmarks = () => {
+  const studentId = localStorage.getItem("studentId"); // Get logged-in user ID
   const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
-    const storedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
-    setFavorites(storedFavorites);
-  }, []);
+    if (studentId) {
+      axios
+        .get(`http://localhost:8080/get-bookmarked-courses?student_id=${studentId}`)
+        .then((response) => {
+          setFavorites(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching bookmarked courses:", error);
+        });
+    }
+  }, [studentId]);
 
-  // Remove from Bookmarks
   const removeFromFavorites = (courseId) => {
-    const updatedFavorites = favorites.filter((course) => course.id !== courseId);
-    setFavorites(updatedFavorites);
-    localStorage.setItem("favorites", JSON.stringify(updatedFavorites)); // Update LocalStorage
+    axios
+      .delete("http://localhost:8080/remove-bookmark", {
+        data: { student_id: studentId, course_id: courseId },
+      })
+      .then(() => {
+        setFavorites(favorites.filter((course) => course.id !== courseId));
+      })
+      .catch((error) => {
+        console.error("Error removing bookmark:", error);
+      });
   };
 
   return (
@@ -37,14 +53,13 @@ const Bookmarks = () => {
               >
                 📄 View PDF
               </a>
-              {/* Remove Button */}
               <button className="remove-btn" onClick={() => removeFromFavorites(course.id)}>
                 ❌ Remove
               </button>
             </div>
           ))
         ) : (
-          <p>No favorite courses yet.</p>
+          <p>No bookmarked courses yet.</p>
         )}
       </div>
     </div>
