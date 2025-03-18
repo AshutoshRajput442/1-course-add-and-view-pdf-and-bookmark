@@ -49,7 +49,8 @@ func Login(c *gin.Context) {
 
 	// Fetch Student from DB
 	var dbPassword string
-	err := config.DB.QueryRow("SELECT password FROM students WHERE email = ?", student.Email).Scan(&dbPassword)
+	var studentID int // ✅ Add studentID
+	err := config.DB.QueryRow("SELECT id, password FROM students WHERE email = ?", student.Email).Scan(&studentID, &dbPassword)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
 		return
@@ -75,7 +76,11 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"token": tokenString})
+	// ✅ Return token + student_id
+	c.JSON(http.StatusOK, gin.H{
+		"token":      tokenString,
+		"student_id": studentID, // ✅ Include student_id in response
+	})
 }
 
 // Protected Dashboard Handler

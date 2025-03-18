@@ -1,8 +1,10 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import CourseList from "./components/courses/CourseList";
-import Favorites from "./components/courses/Favorites";
+// import Favorites from "./components/courses/Favorites";
 import LoginSignup from "./components/loginpage/LoginSignup";
 import CourseForm from "./components/courses/CourseForm";
+import UserBookmark from "./components/courses/UserBookmark";
+
 
 function App() {
   return (
@@ -12,7 +14,7 @@ function App() {
         <Route path="/CourseForm" element={<CourseForm />} />
 
         <Route path="/courses" element={<CourseList />} />
-        <Route path="/favorites" element={<Favorites />} />
+        <Route path="/UserBookmark" element={<UserBookmark />} />
       </Routes>
     </Router>
   );

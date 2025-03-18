@@ -9,4 +9,3 @@ CREATE TABLE courses (
 );                      
 
 SELECT * FROM new_course_db.courses;
-commit;

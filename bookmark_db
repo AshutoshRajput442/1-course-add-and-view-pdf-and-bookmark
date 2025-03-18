@@ -6,3 +6,24 @@ CREATE TABLE bookmarkcourses (
     FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
     UNIQUE KEY unique_bookmark (students_id, course_id)
 );
+
+
+
+
+
+
+
+// 
+
+USE new_course_db; 
+DROP TABLE IF EXISTS bookmarkcourses;
+CREATE TABLE bookmarkcourses (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    students_id INT NOT NULL,
+    course_id INT NOT NULL,
+    FOREIGN KEY (students_id) REFERENCES students(id) ON DELETE CASCADE,
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_bookmark (students_id, course_id)
+) AUTO_INCREMENT=1;
+
+DESC bookmarkcourses;

@@ -153,6 +153,7 @@ type BookmarkRequest struct {
 }
 
 // AddToBookmarks adds a course to the user's bookmarks
+// AddToBookmarks adds a course to the user's bookmarks
 func AddToBookmarks(c *gin.Context) {
 	var req BookmarkRequest
 
@@ -161,8 +162,23 @@ func AddToBookmarks(c *gin.Context) {
 		return
 	}
 
-	query := "INSERT INTO bookmarkcourses (students_id, course_id) VALUES (?, ?)"
-	_, err := config.DB.Exec(query, req.StudentID, req.CourseID)
+	// Check if the bookmark already exists for this student
+	var exists bool
+	queryCheck := "SELECT EXISTS(SELECT 1 FROM bookmarkcourses WHERE students_id = ? AND course_id = ?)"
+	err := config.DB.QueryRow(queryCheck, req.StudentID, req.CourseID).Scan(&exists)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Database error"})
+		return
+	}
+
+	if exists {
+		c.JSON(http.StatusConflict, gin.H{"error": "Course already bookmarked"})
+		return
+	}
+
+	// Insert new bookmark
+	queryInsert := "INSERT INTO bookmarkcourses (students_id, course_id) VALUES (?, ?)"
+	_, err = config.DB.Exec(queryInsert, req.StudentID, req.CourseID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to bookmark course"})
 		return
@@ -213,9 +229,9 @@ func GetBookmarkedCourses(c *gin.Context) {
 	// SQL Query
 	query := `
 		SELECT c.id, c.title, c.description, c.duration, c.image, c.pdf 
-FROM bookmarkcourses bc
-JOIN courses c ON bc.course_id = c.id
-WHERE bc.students_id = ?;
+		FROM bookmarkcourses bc
+		JOIN courses c ON bc.course_id = c.id
+		WHERE bc.students_id = ?;
 	`
 
 	rows, err := config.DB.Query(query, studentID)
@@ -233,6 +249,12 @@ WHERE bc.students_id = ?;
 			return
 		}
 		courses = append(courses, course)
+	}
+
+	// ✅ Always return an empty array instead of null if no courses are found
+	if len(courses) == 0 {
+		c.JSON(http.StatusOK, []Course{})
+		return
 	}
 
 	c.JSON(http.StatusOK, courses)
