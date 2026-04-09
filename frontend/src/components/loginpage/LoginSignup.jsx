@@ -41,7 +41,7 @@ const LoginSignup = () => {
           }
 
           // Redirect to CourseForm
-          navigate("/CourseForm");
+          navigate("/Courses");
         } else {
           setIsLogin(true); // Switch to login after signup
         }

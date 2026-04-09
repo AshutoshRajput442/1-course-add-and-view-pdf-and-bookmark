@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Header from "./Header";
 import "./courseform.css";
 
 const CourseForm = () => {
@@ -49,8 +48,6 @@ const CourseForm = () => {
 
   return (
     <div>
-      <Header /> {/* Using the new Header component */}
-
       <div className="course-form">
         <h2>Add Course</h2>
         <form onSubmit={handleSubmit}>
@@ -99,3 +96,4 @@ const CourseForm = () => {
 };
 
 export default CourseForm;
+
